@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Patients – MediCore{% endblock %}
+{% block page_title %}All Patients{% endblock %}
+
+{% block content %}
+
+<!-- ── Search & Filter Bar ────────────────────────────────── -->
+<div class="card card-compact">
+    <form method="GET" action="{{ url_for('patients') }}" class="filter-bar" id="filterForm">
+        <div class="filter-group">
+            <input type="text"
+                   name="search"
+                   class="form-input"
+                   placeholder="Search patient name…"
+                   value="{{ search }}" />
+        </div>
+        <div class="filter-group">
+            <select name="status" class="form-input" onchange="document.getElementById('filterForm').submit()">
+                <option value="" {% if not status_filter %}selected{% endif %}>All Status</option>
+                <option value="No"  {% if status_filter == 'No'  %}selected{% endif %}>Admitted</option>
+                <option value="Yes" {% if status_filter == 'Yes' %}selected{% endif %}>Discharged</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+        {% if search or status_filter %}
+            <a href="{{ url_for('patients') }}" class="btn btn-outline">Clear</a>
+        {% endif %}
+        <a href="{{ url_for('add_patient_route') }}" class="btn btn-accent ml-auto">+ Add Patient</a>
+    </form>
+</div>
+
+<!-- ── Patients Table ─────────────────────────────────────── -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Patient Records
+            <span class="record-count">{{ patients|length }} record{{ 's' if patients|length != 1 }}</span>
+        </h2>
+    </div>
+
+    {% if patients %}
+    <div class="table-wrapper">
+        <table class="data-table" id="patientsTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Age / Gender</th>
+                    <th>Blood</th>
+                    <th>Doctor</th>
+                    <th>Disease</th>
+                    <th>Admitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patients %}
+                <tr class="patient-row" data-id="{{ p.id }}">
+                    <td class="muted">{{ loop.index }}</td>
+                    <td><strong>{{ p.patient_name }}</strong></td>
+                    <td>{{ p.age }} / {{ p.gender }}</td>
+                    <td><span class="blood-badge">{{ p.blood_group }}</span></td>
+                    <td>{{ p.doctor_name }}</td>
+                    <td>{{ p.disease }}</td>
+                    <td>{{ p.admission_date.strftime('%d %b %Y') if p.admission_date else '—' }}</td>
+                    <td>
+                        {% if p.discharged == 'Yes' %}
+                            <span class="badge badge-green">Discharged</span>
+                        {% else %}
+                            <span class="badge badge-red">Admitted</span>
+                        {% endif %}
+                    </td>
+                    <td class="action-cell">
+                        <a href="{{ url_for('edit_patient_route', patient_id=p.id) }}"
+                           class="btn btn-sm btn-outline">Edit</a>
+
+                        <!-- Delete form (POST for safety) -->
+                        <form method="POST"
+                              action="{{ url_for('delete_patient_route', patient_id=p.id) }}"
+                              class="inline-form"
+                              onsubmit="return confirmDelete('{{ p.patient_name }}')">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            {% if search or status_filter %}
+                <p>No patients match your search. <a href="{{ url_for('patients') }}">Show all →</a></p>
+            {% else %}
+                <p>No patients yet. <a href="{{ url_for('add_patient_route') }}">Add first patient →</a></p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

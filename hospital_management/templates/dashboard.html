@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – MediCore{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- ── Stat Cards ─────────────────────────────────────────── -->
+<div class="stats-grid">
+
+    <div class="stat-card stat-total">
+        <div class="stat-icon">🏥</div>
+        <div class="stat-info">
+            <span class="stat-label">Total Patients</span>
+            <span class="stat-value">{{ stats.total or 0 }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card stat-admitted">
+        <div class="stat-icon">🛏️</div>
+        <div class="stat-info">
+            <span class="stat-label">Currently Admitted</span>
+            <span class="stat-value">{{ stats.admitted or 0 }}</span>
+        </div>
+    </div>
+
+    <div class="stat-card stat-discharged">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+            <span class="stat-label">Discharged</span>
+            <span class="stat-value">{{ stats.discharged or 0 }}</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- ── Recent Patients Table ──────────────────────────────── -->
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Recent Patients</h2>
+        <a href="{{ url_for('patients') }}" class="btn btn-outline btn-sm">View All →</a>
+    </div>
+
+    {% if patients %}
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Doctor</th>
+                    <th>Disease</th>
+                    <th>Admitted</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in patients %}
+                <tr>
+                    <td class="muted">{{ loop.index }}</td>
+                    <td><strong>{{ p.patient_name }}</strong></td>
+                    <td>{{ p.age }}</td>
+                    <td>{{ p.doctor_name }}</td>
+                    <td>{{ p.disease }}</td>
+                    <td>{{ p.admission_date.strftime('%d %b %Y') if p.admission_date else '—' }}</td>
+                    <td>
+                        {% if p.discharged == 'Yes' %}
+                            <span class="badge badge-green">Discharged</span>
+                        {% else %}
+                            <span class="badge badge-red">Admitted</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No patients found. <a href="{{ url_for('add_patient_route') }}">Add the first patient →</a></p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

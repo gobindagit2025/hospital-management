@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Add Patient – MediCore{% endblock %}
+{% block page_title %}Add New Patient{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <div class="form-card-header">
+        <h2>Patient Registration</h2>
+        <p class="subtitle">Fill in the details below to register a new patient.</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('add_patient_route') }}" id="patientForm" novalidate>
+
+        <div class="form-grid">
+
+            <!-- Patient Name -->
+            <div class="form-group">
+                <label class="form-label">Patient Name <span class="required">*</span></label>
+                <input type="text" name="patient_name" class="form-input"
+                       placeholder="Full name"
+                       value="{{ form_data.get('patient_name', '') }}" required />
+            </div>
+
+            <!-- Age -->
+            <div class="form-group">
+                <label class="form-label">Age <span class="required">*</span></label>
+                <input type="number" name="age" class="form-input"
+                       placeholder="e.g. 35" min="0" max="150"
+                       value="{{ form_data.get('age', '') }}" required />
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label class="form-label">Gender <span class="required">*</span></label>
+                <select name="gender" class="form-input" required>
+                    <option value="">Select gender</option>
+                    {% for g in ['Male', 'Female', 'Other'] %}
+                    <option value="{{ g }}"
+                        {% if form_data.get('gender') == g %}selected{% endif %}>{{ g }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Blood Group -->
+            <div class="form-group">
+                <label class="form-label">Blood Group <span class="required">*</span></label>
+                <select name="blood_group" class="form-input" required>
+                    <option value="">Select blood group</option>
+                    {% for bg in ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] %}
+                    <option value="{{ bg }}"
+                        {% if form_data.get('blood_group') == bg %}selected{% endif %}>{{ bg }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Doctor Name -->
+            <div class="form-group">
+                <label class="form-label">Doctor Name <span class="required">*</span></label>
+                <input type="text" name="doctor_name" class="form-input"
+                       placeholder="e.g. Dr. Smith"
+                       value="{{ form_data.get('doctor_name', '') }}" required />
+            </div>
+
+            <!-- Disease -->
+            <div class="form-group">
+                <label class="form-label">Disease / Condition <span class="required">*</span></label>
+                <input type="text" name="disease" class="form-input"
+                       placeholder="e.g. Typhoid Fever"
+                       value="{{ form_data.get('disease', '') }}" required />
+            </div>
+
+            <!-- Admission Date -->
+            <div class="form-group">
+                <label class="form-label">Admission Date <span class="required">*</span></label>
+                <input type="date" name="admission_date" class="form-input"
+                       value="{{ form_data.get('admission_date', '') }}" required />
+            </div>
+
+            <!-- Checkup Date -->
+            <div class="form-group">
+                <label class="form-label">Next Checkup Date</label>
+                <input type="date" name="checkup_date" class="form-input"
+                       value="{{ form_data.get('checkup_date', '') }}" />
+            </div>
+
+            <!-- Discharged -->
+            <div class="form-group">
+                <label class="form-label">Discharged?</label>
+                <select name="discharged" class="form-input" id="dischargedSelect"
+                        onchange="toggleDischargeDate()">
+                    <option value="No"  {% if form_data.get('discharged', 'No') == 'No'  %}selected{% endif %}>No – Still Admitted</option>
+                    <option value="Yes" {% if form_data.get('discharged') == 'Yes' %}selected{% endif %}>Yes – Discharged</option>
+                </select>
+            </div>
+
+            <!-- Discharge Date (shown only when discharged = Yes) -->
+            <div class="form-group" id="dischargeDateGroup"
+                 style="{{ 'display:block' if form_data.get('discharged') == 'Yes' else 'display:none' }}">
+                <label class="form-label">Discharge Date</label>
+                <input type="date" name="discharge_date" class="form-input"
+                       value="{{ form_data.get('discharge_date', '') }}" />
+            </div>
+
+        </div><!-- /form-grid -->
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">Register Patient</button>
+            <a href="{{ url_for('patients') }}" class="btn btn-outline btn-lg">Cancel</a>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

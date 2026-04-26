@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login – MediCore HMS</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ── Variables ─── */
+        :root {
+            --navy:        #0f2040;
+            --navy-light:  #162d55;
+            --navy-muted:  #1e3a6e;
+            --white:       #ffffff;
+            --off-white:   #f4f7fb;
+            --border:      #e2e8f3;
+            --coral:       #e85d4a;
+            --coral-dark:  #c94a38;
+            --coral-light: #fef0ee;
+            --green:       #16a34a;
+            --green-light: #dcfce7;
+            --red:         #dc2626;
+            --red-light:   #fee2e2;
+            --text-dark:   #0f172a;
+            --text-mid:    #475569;
+            --text-muted:  #94a3b8;
+            --shadow-md:   0 4px 16px rgba(15,32,64,.12);
+            --shadow-lg:   0 12px 40px rgba(15,32,64,.18);
+            --radius:      14px;
+            --radius-sm:   8px;
+            --font-sans:   'DM Sans', sans-serif;
+            --font-serif:  'DM Serif Display', serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 15px; }
+
+        body {
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy);
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(232,93,74,.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(22,45,85,.8) 0%, transparent 60%);
+            padding: 20px;
+        }
+
+        /* ── Card ─── */
+        .login-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+
+        /* ── Card Header ─── */
+        .card-header {
+            background: var(--navy);
+            padding: 36px 36px 28px;
+            text-align: center;
+            border-bottom: 3px solid var(--coral);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .brand-icon {
+            width: 42px; height: 42px;
+            background: var(--coral);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-family: var(--font-serif);
+            font-size: 1.7rem;
+            color: var(--white);
+            letter-spacing: .03em;
+        }
+
+        .card-subtitle {
+            color: rgba(255,255,255,.55);
+            font-size: .85rem;
+            font-weight: 400;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+        }
+
+        /* ── Card Body ─── */
+        .card-body {
+            padding: 32px 36px 36px;
+        }
+
+        .login-heading {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* ── Form ─── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--text-mid);
+            margin-bottom: 6px;
+            letter-spacing: .02em;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            pointer-events: none;
+            opacity: .5;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 11px 14px 11px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: .95rem;
+            color: var(--text-dark);
+            background: var(--off-white);
+            transition: border-color .18s, box-shadow .18s;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--coral);
+            box-shadow: 0 0 0 3px rgba(232,93,74,.12);
+            background: var(--white);
+        }
+
+        /* ── Toggle password ─── */
+        .toggle-pw {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            opacity: .45;
+            transition: opacity .15s;
+            padding: 2px;
+        }
+        .toggle-pw:hover { opacity: .8; }
+
+        /* ── Submit button ─── */
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: var(--coral);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: .03em;
+            margin-top: 8px;
+            transition: background .18s, transform .1s, box-shadow .18s;
+        }
+
+        .btn-login:hover {
+            background: var(--coral-dark);
+            box-shadow: 0 4px 12px rgba(232,93,74,.35);
+        }
+
+        .btn-login:active { transform: scale(.98); }
+
+        /* ── Flash messages ─── */
+        .flash-container { margin-bottom: 18px; }
+
+        .flash {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: .88rem;
+            font-weight: 500;
+        }
+
+        .flash-error   { background: var(--red-light);   color: var(--red);   border-left: 3px solid var(--red); }
+        .flash-success { background: var(--green-light); color: var(--green); border-left: 3px solid var(--green); }
+
+        .flash-icon { font-size: 16px; flex-shrink: 0; }
+
+        /* ── Footer ─── */
+        .card-footer {
+            text-align: center;
+            padding: 14px 36px 20px;
+            font-size: .78rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+
+    <!-- Header -->
+    <div class="card-header">
+        <div class="brand">
+            <div class="brand-icon">✚</div>
+            <span class="brand-name">MediCore</span>
+        </div>
+        <p class="card-subtitle">Hospital Management System</p>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+        <p class="login-heading">Admin Sign In</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">
+                            <span class="flash-icon">{% if category == 'error' %}⚠️{% else %}✅{% endif %}</span>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Login Form -->
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrap">
+                    <span class="input-icon">👤</span>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter admin username"
+                        required
+                        autocomplete="username"
+                        value="{{ request.form.get('username', '') }}"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <span class="input-icon">🔒</span>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required
+                        autocomplete="current-password"
+                    />
+                    <button type="button" class="toggle-pw" onclick="togglePw()" title="Show/hide password">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Sign In →</button>
+        </form>
+    </div>
+
+    <div class="card-footer">© 2025 MediCore HMS · Restricted Access</div>
+</div>
+
+<script>
+    function togglePw() {
+        const pw = document.getElementById('password');
+        pw.type = pw.type === 'password' ? 'text' : 'password';
+    }
+</script>
+
+</body>
+</html>

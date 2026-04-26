@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Hospital Management System{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+<!-- ── Sidebar Navigation ─────────────────────────────────── -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <span class="brand-icon">✚</span>
+        <span class="brand-name">MediCore</span>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="{{ url_for('dashboard') }}"
+           class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+            <span class="nav-icon">⬛</span> Dashboard
+        </a>
+        <a href="{{ url_for('patients') }}"
+           class="nav-link {% if request.endpoint == 'patients' %}active{% endif %}">
+            <span class="nav-icon">👤</span> Patients
+        </a>
+        <a href="{{ url_for('add_patient_route') }}"
+           class="nav-link {% if request.endpoint == 'add_patient_route' %}active{% endif %}">
+            <span class="nav-icon">➕</span> Add Patient
+        </a>
+    </nav>
+
+    <div class="sidebar-footer" style="padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; gap: 4px;">
+        <a href="{{ url_for('change_password') }}"
+           class="nav-link {% if request.endpoint == 'change_password' %}active{% endif %}"
+           style="font-size:.83rem;">
+            <span class="nav-icon">🔐</span> Change Password
+        </a>
+        <a href="{{ url_for('logout') }}"
+           class="nav-link"
+           style="font-size:.83rem; color: rgba(232,93,74,.85);"
+           onclick="return confirm('Are you sure you want to log out?')">
+            <span class="nav-icon">🚪</span> Logout
+        </a>
+        <span style="color:rgba(255,255,255,.3);font-size:.75rem;padding:6px 12px 0;">© 2025 MediCore HMS</span>
+    </div>
+</aside>
+
+<!-- ── Main Content ───────────────────────────────────────── -->
+<main class="main-content">
+
+    <!-- Top bar -->
+    <header class="topbar">
+        <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+        <div class="topbar-right">
+            <span class="topbar-badge">Admin</span>
+        </div>
+    </header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                        <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Page body -->
+    <div class="page-body">
+        {% block content %}{% endblock %}
+    </div>
+
+</main>
+
+<!-- Custom JS -->
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
